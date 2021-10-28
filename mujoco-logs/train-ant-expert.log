@@ -1,0 +1,10 @@
+Num steps: 10000    Return: 982.5   Time: 0:00:46
+Num steps: 20000    Return: 771.7   Time: 0:05:31
+Num steps: 30000    Return: 702.8   Time: 0:10:17
+Num steps: 40000    Return: 517.2   Time: 0:14:39
+Num steps: 50000    Return: 719.2   Time: 0:19:17
+Num steps: 60000    Return: 649.1   Time: 0:24:00
+Num steps: 70000    Return: 609.6   Time: 0:28:43
+Num steps: 80000    Return: 543.1   Time: 0:33:25
+Num steps: 90000    Return: 221.7   Time: 0:37:45
+Num steps: 100000   Return: 740.9   Time: 0:42:18

@@ -1,0 +1,45 @@
+Traceback (most recent call last):
+  File "train_expert.py", line 46, in <module>
+    run(args)
+  File "train_expert.py", line 12, in run
+    env = make_env(args.env_id)
+  File "/scratch/nicholaslee/gail-airl-ppo.pytorch/gail_airl_ppo/env.py", line 7, in make_env
+    return NormalizedEnv(gym.make(env_id))
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 145, in make
+    return registry.make(id, **kwargs)
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 89, in make
+    spec = self.spec(path)
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 118, in spec
+    raise error.Error('Attempted to look up malformed environment ID: {}. (Currently all IDs must be of the form {}.)'.format(id.encode('utf-8'), env_id_re.pattern))
+gym.error.Error: Attempted to look up malformed environment ID: b'Cheetah-V2'. (Currently all IDs must be of the form ^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$.)
+Traceback (most recent call last):
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 121, in spec
+    return self.env_specs[id]
+KeyError: 'Cheetah-v2'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train_expert.py", line 46, in <module>
+    run(args)
+  File "train_expert.py", line 12, in run
+    env = make_env(args.env_id)
+  File "/scratch/nicholaslee/gail-airl-ppo.pytorch/gail_airl_ppo/env.py", line 7, in make_env
+    return NormalizedEnv(gym.make(env_id))
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 145, in make
+    return registry.make(id, **kwargs)
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 89, in make
+    spec = self.spec(path)
+  File "/home/eecs/nicholas_lee/anaconda3/envs/gail/lib/python3.7/site-packages/gym/envs/registration.py", line 131, in spec
+    raise error.UnregisteredEnv('No registered env with id: {}'.format(id))
+gym.error.UnregisteredEnv: No registered env with id: Cheetah-v2
+Num steps: 10000    Return: -1.3    Time: 0:00:20
+Num steps: 20000    Return: 638.4   Time: 0:04:51
+Num steps: 30000    Return: 1642.4   Time: 0:09:19
+Num steps: 40000    Return: 2895.5   Time: 0:13:50
+Num steps: 50000    Return: 3475.1   Time: 0:18:16
+Num steps: 60000    Return: 4000.7   Time: 0:22:42
+Num steps: 70000    Return: 4337.4   Time: 0:27:08
+Num steps: 80000    Return: 4248.9   Time: 0:31:33
+Num steps: 90000    Return: 4494.3   Time: 0:35:58
+Num steps: 100000   Return: 5369.2   Time: 0:40:24
