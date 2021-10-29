@@ -2,7 +2,7 @@ import os
 import argparse
 import torch
 
-from gail_airl_ppo.env import make_env
+from gail_airl_ppo.env import make_env, make_dmc_env
 from gail_airl_ppo.algo import SACExpert
 from gail_airl_ppo.utils import collect_demo
 
@@ -36,6 +36,9 @@ def run(args):
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--weight', type=str, required=True)
+    p.add_argument('--dmc', action='store_true')
+    p.add_argument('--domain', type=str, default='quadruped')
+    p.add_argument('--task', type=str, default='walk')
     p.add_argument('--env_id', type=str, default='Hopper-v3')
     p.add_argument('--buffer_size', type=int, default=10**6)
     p.add_argument('--std', type=float, default=0.0)
