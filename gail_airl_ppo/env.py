@@ -1,4 +1,5 @@
 import gym
+import dmc2gym
 
 gym.logger.set_level(40)
 
@@ -6,6 +7,8 @@ gym.logger.set_level(40)
 def make_env(env_id):
     return NormalizedEnv(gym.make(env_id))
 
+def make_dmc_env(domain_id, task_id):
+    return NormalizedEnv(dmc2gym.make(domain_name=domain_id, task_name=task_id))
 
 class NormalizedEnv(gym.Wrapper):
 

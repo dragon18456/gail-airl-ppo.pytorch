@@ -3,14 +3,18 @@ import argparse
 from datetime import datetime
 import torch
 
-from gail_airl_ppo.env import make_env
+from gail_airl_ppo.env import make_env, make_dmc_env
 from gail_airl_ppo.algo import SAC
 from gail_airl_ppo.trainer import Trainer
 
 
 def run(args):
-    env = make_env(args.env_id)
-    env_test = make_env(args.env_id)
+    if args.dmc:
+        env = make_dmc_env(args.domain, args.task)
+        env_test = make_dmc_env(args.domain, args.task)
+    else:
+        env = make_env(args.env_id)
+        env_test = make_env(args.env_id)
 
     algo = SAC(
         state_shape=env.observation_space.shape,
@@ -39,6 +43,9 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--num_steps', type=int, default=10**6)
     p.add_argument('--eval_interval', type=int, default=10**4)
+    p.add_argument('--dmc', action='store_true')
+    p.add_argument('--domain', type=str, default='quadruped')
+    p.add_argument('--task', type=str, default='walk')
     p.add_argument('--env_id', type=str, default='Hopper-v3')
     p.add_argument('--cuda', action='store_true')
     p.add_argument('--seed', type=int, default=0)
