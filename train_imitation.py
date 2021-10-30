@@ -10,8 +10,12 @@ from gail_airl_ppo.trainer import Trainer
 
 
 def run(args):
-    env = make_env(args.env_id)
-    env_test = make_env(args.env_id)
+    if args.dmc:
+        env = make_dmc_env(args.domain, args.task)
+        env_test = make_dmc_env(args.domain, args.task)
+    else:
+        env = make_env(args.env_id)
+        env_test = make_env(args.env_id)
     buffer_exp = SerializedBuffer(
         path=args.buffer,
         device=torch.device("cuda" if args.cuda else "cpu")
@@ -27,8 +31,12 @@ def run(args):
     )
 
     time = datetime.now().strftime("%Y%m%d-%H%M")
-    log_dir = os.path.join(
-        'logs', args.env_id, args.algo, f'seed{args.seed}-{time}')
+    if args.dmc:
+        log_dir = os.path.join(
+            'logs', f"{args.domain}-{args.task}", args.algo, f'seed{args.seed}-{time}')
+    else:
+        log_dir = os.path.join(
+            'logs', args.env_id, args.algo, f'seed{args.seed}-{time}')
 
     trainer = Trainer(
         env=env,

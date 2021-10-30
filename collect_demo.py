@@ -8,7 +8,12 @@ from gail_airl_ppo.utils import collect_demo
 
 
 def run(args):
-    env = make_env(args.env_id)
+    if args.dmc:
+        env = make_dmc_env(args.domain, args.task)
+        env_test = make_dmc_env(args.domain, args.task)
+    else:
+        env = make_env(args.env_id)
+        env_test = make_env(args.env_id)
 
     algo = SACExpert(
         state_shape=env.observation_space.shape,
@@ -26,11 +31,19 @@ def run(args):
         p_rand=args.p_rand,
         seed=args.seed
     )
-    buffer.save(os.path.join(
-        'buffers',
-        args.env_id,
-        f'size{args.buffer_size}_std{args.std}_prand{args.p_rand}.pth'
-    ))
+    if args.dmc:
+        buffer.save(os.path.join(
+            'buffers',
+            f'{args.domain}-{args.task}',
+            f'size{args.buffer_size}_std{args.std}_prand{args.p_rand}.pth'
+        ))
+    else:
+        buffer.save(os.path.join(
+            'buffers',
+            args.env_id,
+            f'size{args.buffer_size}_std{args.std}_prand{args.p_rand}.pth'
+        ))
+
 
 
 if __name__ == '__main__':

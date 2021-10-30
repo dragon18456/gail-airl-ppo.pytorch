@@ -24,8 +24,12 @@ def run(args):
     )
 
     time = datetime.now().strftime("%Y%m%d-%H%M")
-    log_dir = os.path.join(
-        'logs', args.env_id, 'sac', f'seed{args.seed}-{time}')
+    if args.dmc:
+        log_dir = os.path.join(
+            'logs', f'{args.domain}-{args.task}', 'sac', f'seed{args.seed}-{time}')
+    else:
+        log_dir = os.path.join(
+            'logs', args.env_id, 'sac', f'seed{args.seed}-{time}')
 
     trainer = Trainer(
         env=env,
