@@ -2,6 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.optim import Adam
+import os
 
 from .ppo import PPO
 from gail_airl_ppo.network import GAILDiscrim
@@ -85,3 +86,10 @@ class GAIL(PPO):
                 acc_exp = (logits_exp > 0).float().mean().item()
             writer.add_scalar('stats/acc_pi', acc_pi, self.learning_steps)
             writer.add_scalar('stats/acc_exp', acc_exp, self.learning_steps)
+    
+    def save_models(self, save_dir):
+        super().save_models(save_dir)
+        torch.save(
+            self.disc.state_dict(),
+            os.path.join(save_dir, 'disc.pth')
+        )

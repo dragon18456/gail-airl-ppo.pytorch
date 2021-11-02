@@ -30,6 +30,11 @@ def run(args):
         rollout_length=args.rollout_length
     )
 
+    if args.actor_weights:
+        algo.actor.load_state_dict(torch.load(args.actor_weights))
+    if args.critic_weights:
+        algo.critic.load_state_dict(torch.load(args.critic_weights))
+
     time = datetime.now().strftime("%Y%m%d-%H%M")
     if args.dmc:
         log_dir = os.path.join(
@@ -45,7 +50,7 @@ def run(args):
         log_dir=log_dir,
         num_steps=args.num_steps,
         eval_interval=args.eval_interval,
-        seed=args.seed
+        seed=args.seed,
     )
     trainer.train()
 
@@ -63,5 +68,7 @@ if __name__ == '__main__':
     p.add_argument('--algo', type=str, default='gail')
     p.add_argument('--cuda', action='store_true')
     p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--actor_weights', type=str, default="")
+    p.add_argument('--critic_weights', type=str, default="")
     args = p.parse_args()
     run(args)

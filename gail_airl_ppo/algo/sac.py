@@ -16,7 +16,7 @@ class SAC(Algorithm):
     def __init__(self, state_shape, action_shape, device, seed, gamma=0.99,
                  batch_size=256, buffer_size=10**6, lr_actor=3e-4,
                  lr_critic=3e-4, lr_alpha=3e-4, units_actor=(256, 256),
-                 units_critic=(256, 256), start_steps=10000, tau=5e-3):
+                 units_critic=(256, 256), start_steps=10000, tau=5e-3, disc=None):
         super().__init__(state_shape, action_shape, device, seed, gamma)
 
         # Replay buffer.
@@ -49,6 +49,8 @@ class SAC(Algorithm):
             hidden_activation=nn.ReLU(inplace=True)
         ).to(device).eval()
 
+        self.disc = disc
+
         soft_update(self.critic_target, self.critic, 1.0)
         disable_gradient(self.critic_target)
 
@@ -77,8 +79,15 @@ class SAC(Algorithm):
             action = env.action_space.sample()
         else:
             action = self.explore(state)[0]
-
+        
+        if self.disc:
+            disc_reward = self.disc.calculate_reward(torch.Tensor(state).to("cuda"), torch.Tensor(action).to("cuda"))
+        
         next_state, reward, done, _ = env.step(action)
+        
+        if self.disc:
+            reward = disc_reward.cpu().numpy().item()
+        
         mask = False if t == env._max_episode_steps else done
 
         self.buffer.append(state, action, reward, mask, next_state)

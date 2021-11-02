@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.optim import Adam
+import os
 
 from .base import Algorithm
 from gail_airl_ppo.buffer import RolloutBuffer
@@ -141,4 +142,12 @@ class PPO(Algorithm):
                 'stats/entropy', entropy.item(), self.learning_steps)
 
     def save_models(self, save_dir):
-        pass
+        super().save_models(save_dir)
+        torch.save(
+            self.actor.state_dict(),
+            os.path.join(save_dir, 'actor.pth')
+        )
+        torch.save(
+            self.critic.state_dict(),
+            os.path.join(save_dir, 'critic.pth')
+        )

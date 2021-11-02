@@ -2,10 +2,12 @@ import os
 import argparse
 from datetime import datetime
 import torch
+from torch import nn
 
 from gail_airl_ppo.env import make_env, make_dmc_env
 from gail_airl_ppo.algo import SAC
 from gail_airl_ppo.trainer import Trainer
+from gail_airl_ppo.network import GAILDiscrim, AIRLDiscrim
 
 
 def run(args):
@@ -16,11 +18,35 @@ def run(args):
         env = make_env(args.env_id)
         env_test = make_env(args.env_id)
 
+    disc = None
+
+    if args.disc_weights:
+        if args.disc_type == "gail":
+            disc = GAILDiscrim(
+                state_shape=env.observation_space.shape,
+                action_shape=env.action_space.shape,
+                hidden_units=(100, 100),
+                hidden_activation=nn.Tanh()
+            ).to(torch.device("cuda" if args.cuda else "cpu"))
+        else:
+            disc = AIRLDiscrim(
+                state_shape=env.observation_space.shape,
+                gamma=.995,
+                hidden_units_r=(100, 100),
+                hidden_units_v=(100, 100),
+                hidden_activation_r=nn.ReLU(inplace=True),
+                hidden_activation_v=nn.ReLU(inplace=True)
+            ).to(torch.device("cuda" if args.cuda else "cpu"))
+
+        disc.load_state_dict(torch.load(args.disc_weights))
+    
     algo = SAC(
         state_shape=env.observation_space.shape,
         action_shape=env.action_space.shape,
         device=torch.device("cuda" if args.cuda else "cpu"),
-        seed=args.seed
+        seed=args.seed,
+        disc=disc,
+        disc_type=disc_type
     )
 
     time = datetime.now().strftime("%Y%m%d-%H%M")
@@ -53,5 +79,7 @@ if __name__ == '__main__':
     p.add_argument('--env_id', type=str, default='Hopper-v3')
     p.add_argument('--cuda', action='store_true')
     p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--disc_weights', type=str, default="")
+    p.add_argument('--disc_type', type=str, default="gail")
     args = p.parse_args()
     run(args)

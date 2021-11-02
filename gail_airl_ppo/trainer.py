@@ -2,7 +2,7 @@ import os
 from time import time, sleep
 from datetime import timedelta
 from torch.utils.tensorboard import SummaryWriter
-
+import torch
 
 class Trainer:
 
